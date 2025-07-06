@@ -5,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '10 Minute Mail - Temporary Email Service',
+  title: 'GhostBox - Temporary Email Service',
   description: 'Get a temporary email address that expires in 10 minutes. Perfect for testing, registrations, and avoiding spam.',
   keywords: 'temporary email, 10 minute mail, disposable email, temp mail, fake email',
 }
