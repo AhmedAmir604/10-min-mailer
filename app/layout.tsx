@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
-  title: 'GhostBox - Temporary Email Service',
-  description: 'Get a temporary email address that expires in 10 minutes. Perfect for testing, registrations, and avoiding spam.',
-  keywords: 'temporary email, 10 minute mail, disposable email, temp mail, fake email',
+  title: 'GhostBox - Ephemeral Email',
+  description: 'Ultra-minimal temporary email service. Create disposable addresses that vanish without a trace.',
+  keywords: 'temporary email, disposable email, ephemeral mail, minimal design, privacy',
+  authors: [{ name: 'GhostBox' }],
+  viewport: 'width=device-width, initial-scale=1',
+  themeColor: '#000000',
 }
 
 export default function RootLayout({
@@ -16,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <html lang="en" className="dark">
+      <body className="antialiased bg-black text-white">
+        <div className="min-h-screen bg-black">
           {children}
         </div>
       </body>

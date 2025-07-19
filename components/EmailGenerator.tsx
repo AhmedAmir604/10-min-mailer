@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Clock, Shuffle } from 'lucide-react';
+import { Timer, Shuffle, Zap, Clock } from 'lucide-react';
 
 type ExpiryDuration = '10min' | '30min' | '1hour' | '24hours';
 
@@ -15,10 +15,10 @@ export default function EmailGenerator({ onEmailGenerated }: EmailGeneratorProps
   const [isLoading, setIsLoading] = useState(false);
 
   const durationOptions = [
-    { value: '10min', label: '10 Minutes' },
-    { value: '30min', label: '30 Minutes' },
-    { value: '1hour', label: '1 Hour' },
-    { value: '24hours', label: '24 Hours' },
+    { value: '10min', label: '10 minutes', icon: '⚡' },
+    { value: '30min', label: '30 minutes', icon: '🔥' },
+    { value: '1hour', label: '1 hour', icon: '⏰' },
+    { value: '24hours', label: '24 hours', icon: '🌙' },
   ];
 
   const generateEmail = async () => {
@@ -39,11 +39,10 @@ export default function EmailGenerator({ onEmailGenerated }: EmailGeneratorProps
       if (response.ok) {
         const data = await response.json();
         onEmailGenerated(data.email);
-        setCustomPrefix(''); // Clear custom prefix after successful generation
+        setCustomPrefix('');
       } else {
         const error = await response.json();
         console.error('Failed to generate email:', error.error);
-        // You could add error handling/toast here
       }
     } catch (error) {
       console.error('Error generating email:', error);
@@ -56,66 +55,78 @@ export default function EmailGenerator({ onEmailGenerated }: EmailGeneratorProps
     <div className="space-y-4">
       {/* Duration Selection */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          <Clock className="w-4 h-4 inline mr-1" />
-          Email Duration
+        <label className="flex items-center gap-2 text-xs font-medium text-white mb-3">
+          <Timer className="w-3 h-3 text-blue-400" />
+          Self-Destruct Timer
         </label>
-        <select
-          value={duration}
-          onChange={(e) => setDuration(e.target.value as ExpiryDuration)}
-          className="input"
-        >
+        
+        <div className="grid grid-cols-2 gap-2">
           {durationOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
+            <button
+              key={option.value}
+              onClick={() => setDuration(option.value as ExpiryDuration)}
+              className={`p-2 rounded-xl border transition-all duration-300 text-left ${
+                duration === option.value
+                  ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
+                  : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-sm">{option.icon}</span>
+                <div className="font-medium text-xs">{option.label}</div>
+              </div>
+            </button>
           ))}
-        </select>
+        </div>
       </div>
 
       {/* Custom Prefix */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Custom Prefix (Optional)
+        <label className="flex items-center gap-2 text-xs font-medium text-white mb-2">
+          <Shuffle className="w-3 h-3 text-purple-400" />
+          Custom Prefix
+          <span className="px-2 py-0.5 text-xs bg-gray-500/20 text-gray-400 rounded-full font-normal">
+            Optional
+          </span>
         </label>
         <input
           type="text"
           value={customPrefix}
           onChange={(e) => setCustomPrefix(e.target.value)}
-          placeholder="Enter custom prefix..."
-          className="input"
+          placeholder="Enter custom prefix"
+          className="input text-sm py-2"
           minLength={3}
           maxLength={20}
         />
-        <p className="text-xs text-gray-500 mt-1">
-          Leave empty for random generation. 3-20 characters allowed.
-        </p>
       </div>
 
       {/* Generate Button */}
       <button
         onClick={generateEmail}
         disabled={isLoading}
-        className="btn-primary w-full flex items-center justify-center gap-2"
+        className="btn-primary w-full py-3 text-sm font-semibold"
       >
         {isLoading ? (
           <>
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
             Generating...
           </>
         ) : (
           <>
-            <Shuffle className="w-4 h-4" />
+            <Zap className="w-4 h-4" />
             Generate Email
           </>
         )}
       </button>
 
-      {/* Info */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-        <p className="text-sm text-blue-800">
-          💡 Your email will be automatically deleted after the selected duration expires.
-        </p>
+      {/* Compact Info */}
+      <div className="glass-card-minimal p-3">
+        <div className="flex items-center gap-2">
+          <Clock className="w-3 h-3 text-emerald-400" />
+          <p className="text-xs text-gray-400">
+            Auto-destructs after selected duration
+          </p>
+        </div>
       </div>
     </div>
   );
